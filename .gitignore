@@ -1,0 +1,19 @@
+# lokalni pomoćni fajlovi (ne idu na sajt/repo)
+server.js
+povezivanje-generacija-sajt.zip
+~$*.docx
+*.log
+
+# OS junk
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
+
+# Editor
+.vscode/
+
+# Privremeni fajlovi
+_*.png
+_*.html
+*.tmp
