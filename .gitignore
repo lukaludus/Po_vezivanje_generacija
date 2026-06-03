@@ -20,3 +20,6 @@ _*.html
 
 # Build izlaz za deploy (generiše se iz izvora)
 /dist/
+
+# Wrangler lokalni keš
+.wrangler/
