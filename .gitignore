@@ -17,3 +17,6 @@ desktop.ini
 _*.png
 _*.html
 *.tmp
+
+# Build izlaz za deploy (generiše se iz izvora)
+/dist/
