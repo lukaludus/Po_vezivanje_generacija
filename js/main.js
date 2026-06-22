@@ -66,6 +66,145 @@
     if (e.key === 'Escape' && modal && !modal.hidden) closeModal();
   });
 
+  /* ---------- Brojač rezultata (vrti se pri skrolu) ---------- */
+  var counters = document.querySelectorAll('[data-count]');
+  if (counters.length) {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var formatNum = function (n) {
+      // grupisanje hiljada razmakom: 171 210
+      return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    };
+
+    var animate = function (el) {
+      var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+      if (reduce) { el.textContent = formatNum(target); return; }
+      if (el._raf) cancelAnimationFrame(el._raf);
+      var dur = 1700, start = null;
+      var step = function (ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+        el.textContent = formatNum(target * eased);
+        if (p < 1) el._raf = requestAnimationFrame(step);
+        else { el.textContent = formatNum(target); el._raf = null; }
+      };
+      el._raf = requestAnimationFrame(step);
+    };
+
+    if ('IntersectionObserver' in window && !reduce) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animate(entry.target);
+          } else {
+            // resetuj da se ponovo izvrti pri sledećem skrolu do sekcije
+            if (entry.target._raf) { cancelAnimationFrame(entry.target._raf); entry.target._raf = null; }
+            entry.target.textContent = formatNum(0);
+          }
+        });
+      }, { threshold: 0.45 });
+      counters.forEach(function (el) { io.observe(el); });
+    } else {
+      counters.forEach(animate);
+    }
+  }
+
+  /* ---------- Galerija / lightbox ---------- */
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var lightboxCount = document.getElementById('lightboxCount');
+  var galleryItems = Array.prototype.slice.call(document.querySelectorAll('.gallery__item'));
+  var lbIndex = 0;
+  var lbLastFocused = null;
+
+  function showLightbox(i) {
+    if (!galleryItems.length) return;
+    lbIndex = (i + galleryItems.length) % galleryItems.length;
+    var item = galleryItems[lbIndex];
+    var src = item.getAttribute('data-full');
+    var img = item.querySelector('img');
+    lightboxImg.setAttribute('src', src);
+    lightboxImg.setAttribute('alt', img ? img.getAttribute('alt') : '');
+    if (lightboxCount) lightboxCount.textContent = (lbIndex + 1) + ' / ' + galleryItems.length;
+  }
+
+  function openLightbox(i) {
+    if (!lightbox) return;
+    lbLastFocused = document.activeElement;
+    showLightbox(i);
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+    var closeBtn = lightbox.querySelector('.lightbox__close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.hidden = true;
+    lightboxImg.setAttribute('src', '');
+    document.body.style.overflow = '';
+    if (lbLastFocused && lbLastFocused.focus) lbLastFocused.focus();
+  }
+
+  galleryItems.forEach(function (item, i) {
+    item.addEventListener('click', function () { openLightbox(i); });
+  });
+
+  if (lightbox) {
+    lightbox.addEventListener('click', function (e) {
+      if (e.target.closest('[data-lb-close]')) { closeLightbox(); return; }
+      if (e.target.closest('[data-lb-prev]')) { showLightbox(lbIndex - 1); return; }
+      if (e.target.closest('[data-lb-next]')) { showLightbox(lbIndex + 1); return; }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (lightbox.hidden) return;
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') showLightbox(lbIndex - 1);
+      else if (e.key === 'ArrowRight') showLightbox(lbIndex + 1);
+    });
+  }
+
+  /* ---------- Deljenje (Web Share + fallback kopiranje) ---------- */
+  var shareData = {
+    title: document.title,
+    text: '(Po)vezivanje generacija — donatorska akcija za studentske medije',
+    url: (function () {
+      var c = document.querySelector('link[rel="canonical"]');
+      return (c && c.href) || window.location.href;
+    })()
+  };
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-share]');
+    if (!btn) return;
+    e.preventDefault();
+
+    if (navigator.share) {
+      navigator.share(shareData).catch(function () { /* korisnik otkazao — ignoriši */ });
+      return;
+    }
+
+    var done = function () {
+      var original = btn.getAttribute('data-label') || btn.textContent;
+      if (!btn.getAttribute('data-label')) btn.setAttribute('data-label', original);
+      btn.textContent = 'Link kopiran ✓';
+      btn.disabled = true;
+      setTimeout(function () {
+        btn.textContent = btn.getAttribute('data-label');
+        btn.disabled = false;
+      }, 2000);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareData.url).then(done).catch(function () {
+        window.prompt('Kopiraj link:', shareData.url);
+      });
+    } else {
+      window.prompt('Kopiraj link:', shareData.url);
+    }
+  });
+
   /* ---------- Senka na nav-u pri skrolovanju ---------- */
   var nav = document.querySelector('.nav');
   if (nav) {
