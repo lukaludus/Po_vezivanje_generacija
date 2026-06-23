@@ -209,10 +209,48 @@
   var nav = document.querySelector('.nav');
   if (nav) {
     var onScroll = function () {
-      if (window.scrollY > 8) nav.style.boxShadow = '0 6px 20px rgba(23,19,15,.10)';
-      else nav.style.boxShadow = 'none';
+      nav.classList.toggle('is-scrolled', window.scrollY > 8);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+  }
+
+  /* ---------- Aktivna sekcija u navigaciji (scroll-spy) ---------- */
+  if ('IntersectionObserver' in window) {
+    var navAnchors = Array.prototype.slice.call(
+      document.querySelectorAll('.nav__links a[href^="#"]')
+    );
+    // mapa: id sekcije -> link
+    var linkById = {};
+    var spyTargets = [];
+    navAnchors.forEach(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      if (!id) return;
+      var section = document.getElementById(id);
+      if (!section) return;
+      linkById[id] = a;
+      spyTargets.push(section);
+    });
+
+    if (spyTargets.length) {
+      var setActive = function (id) {
+        navAnchors.forEach(function (a) { a.classList.remove('is-active'); });
+        if (linkById[id]) linkById[id].classList.add('is-active');
+      };
+
+      var spy = new IntersectionObserver(function (entries) {
+        // odaberi sekciju koja je najviše u vidnom polju
+        var best = null;
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting &&
+              (!best || entry.intersectionRatio > best.intersectionRatio)) {
+            best = entry;
+          }
+        });
+        if (best) setActive(best.target.id);
+      }, { rootMargin: '-64px 0px -55% 0px', threshold: [0.15, 0.4, 0.75] });
+
+      spyTargets.forEach(function (el) { spy.observe(el); });
+    }
   }
 })();

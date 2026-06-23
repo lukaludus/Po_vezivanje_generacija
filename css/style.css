@@ -49,30 +49,54 @@ h1,h2,h3,h4,.brand,.kicker,.btn,.nav__links a,.read__title,.read__cta{
   background:rgba(245,241,232,.94);
   backdrop-filter:saturate(140%) blur(6px);
   border-bottom:1px solid var(--line);
+  transition:box-shadow .25s, border-color .25s;
+}
+.nav.is-scrolled{
+  box-shadow:0 6px 20px rgba(23,19,15,.10);
+  border-bottom-color:transparent;
 }
 .nav__inner{
   max-width:var(--maxw); margin:0 auto; padding:10px 22px;
   display:flex; align-items:center; justify-content:space-between; gap:16px;
 }
 .brand{
+  display:inline-flex; align-items:center; gap:11px;
   font-weight:900; font-size:19px; letter-spacing:-.01em;
   color:var(--ink); text-transform:uppercase; white-space:nowrap;
 }
 .brand:hover{ text-decoration:none; }
+.brand__mark{
+  width:34px; height:34px; flex:0 0 auto; display:block;
+  border-radius:9px; box-shadow:0 2px 8px rgba(23,19,15,.16);
+  transition:transform .25s ease;
+}
+.brand:hover .brand__mark{ transform:rotate(-5deg) scale(1.04); }
+.brand__word{ line-height:1; }
 .brand__po{ color:var(--red); font-weight:600; }
 .brand__rest{ font-weight:900; }
 
-.nav__links{ display:flex; align-items:center; gap:22px; }
+.nav__links{ display:flex; align-items:center; gap:26px; }
 .nav__links a{
+  position:relative;
   color:var(--ink); font-weight:600; font-size:14px;
-  letter-spacing:.01em; text-transform:uppercase;
+  letter-spacing:.02em; text-transform:uppercase;
+  transition:color .18s;
 }
-.nav__links a:hover{ color:var(--red); text-decoration:none; }
+.nav__links a:not(.nav__ig)::after{
+  content:""; position:absolute; left:0; right:0; bottom:-6px; height:2px;
+  background:var(--red); border-radius:2px;
+  transform:scaleX(0); transform-origin:left; transition:transform .22s ease;
+}
+.nav__links a:not(.nav__ig):hover{ color:var(--red); text-decoration:none; }
+.nav__links a:not(.nav__ig):hover::after,
+.nav__links a.is-active:not(.nav__ig)::after{ transform:scaleX(1); }
+.nav__links a.is-active:not(.nav__ig){ color:var(--red); }
 .nav__ig{
   color:var(--red) !important; border:1.5px solid var(--red);
-  padding:6px 12px; border-radius:999px; font-size:13px !important;
+  padding:6px 13px; border-radius:999px; font-size:13px !important;
+  transition:background .18s, color .18s;
 }
-.nav__ig:hover{ background:var(--red); color:#fff !important; }
+.nav__ig:hover{ background:var(--red); color:#fff !important; text-decoration:none; }
 
 .nav__toggle{
   display:none; flex-direction:column; gap:5px;
@@ -300,6 +324,36 @@ h1,h2,h3,h4,.brand,.kicker,.btn,.nav__links a,.read__title,.read__cta{
 .thanks__quote{ font-family:"Lora",serif; font-style:italic; font-size:1.18rem; line-height:1.5; color:var(--paper); margin:0 0 10px; }
 .thanks__sign{ font-family:"Archivo",sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:12px; color:rgba(245,241,232,.85); margin:0; }
 
+/* ---------------- KOME SU NAMENJENA (u Rezultatu) ---------------- */
+.result__beneficiaries-lead{
+  max-width:50ch; margin:22px auto 0; font-size:1.05rem;
+  color:rgba(245,241,232,.92);
+}
+.beneficiaries{
+  display:grid; gap:18px; grid-template-columns:1fr;
+  max-width:680px; margin:18px auto 0;
+}
+.beneficiary{
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  padding:24px 20px; background:var(--paper);
+  border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--shadow); text-align:center;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.beneficiary:hover{ transform:translateY(-3px); box-shadow:0 16px 38px rgba(23,19,15,.16); }
+.beneficiary:focus-visible{ outline:3px solid var(--red); outline-offset:2px; }
+.beneficiary__logo{ height:64px; width:auto; object-fit:contain; }
+.beneficiary__name{
+  font-family:"Archivo",sans-serif; font-weight:800; font-size:1.2rem; color:var(--ink);
+}
+.beneficiary__cta{
+  font-family:"Archivo",sans-serif; font-weight:700; font-size:13px; color:var(--red);
+}
+
+@media (min-width:640px){
+  .beneficiaries{ grid-template-columns:1fr 1fr; max-width:760px; }
+}
+
 /* ---------------- GALERIJA ---------------- */
 .gallery{
   display:grid; gap:12px;
@@ -451,6 +505,8 @@ h1,h2,h3,h4,.brand,.kicker,.btn,.nav__links a,.read__title,.read__cta{
 }
 @media (max-width:719px){
   .nav__toggle{ display:flex; }
+  .brand{ font-size:18px; gap:10px; }
+  .brand__mark{ width:30px; height:30px; }
   .nav__links{
     position:absolute; top:100%; left:0; right:0;
     flex-direction:column; align-items:flex-start; gap:0;
@@ -460,6 +516,8 @@ h1,h2,h3,h4,.brand,.kicker,.btn,.nav__links a,.read__title,.read__cta{
   }
   .nav__links.open{ transform:none; opacity:1; pointer-events:auto; }
   .nav__links a{ padding:11px 0; width:100%; border-bottom:1px solid var(--line); }
+  /* u mobilnom meniju indikator je samo boja, bez donje linije */
+  .nav__links a:not(.nav__ig)::after{ display:none; }
   .nav__ig{ margin-top:12px; display:inline-block; }
   .section{ padding:56px 0; }
   .hero{ padding:54px 0 60px; }

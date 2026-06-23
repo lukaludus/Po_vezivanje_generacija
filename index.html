@@ -25,23 +25,32 @@
   <meta name="twitter:image" content="https://povezivanjegeneracija.com/assets/img/pera-portret.jpg" />
 
   <!-- Favicon -->
-  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
-  <link rel="icon" href="favicon-32.png?v=2" sizes="32x32" type="image/png" />
-  <link rel="icon" href="favicon-16.png?v=2" sizes="16x16" type="image/png" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" />
+  <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
+  <link rel="icon" href="favicon.svg?v=3" type="image/svg+xml" />
+  <link rel="icon" href="favicon-48.png?v=3" sizes="48x48" type="image/png" />
+  <link rel="icon" href="favicon-32.png?v=3" sizes="32x32" type="image/png" />
+  <link rel="icon" href="favicon-16.png?v=3" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=3" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20260622e" />
+  <link rel="stylesheet" href="css/style.css?v=20260623b" />
 </head>
 <body>
 
 <!-- ================= NAV ================= -->
 <header class="nav" id="top">
   <div class="nav__inner">
-    <a href="#top" class="brand" aria-label="Početak">
-      <span class="brand__po">(PO)</span><span class="brand__rest">VEZIVANJE</span>
+    <a href="#top" class="brand" aria-label="(Po)vezivanje generacija — početak">
+      <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect width="64" height="64" rx="12" fill="var(--red)" />
+        <g fill="none" stroke="var(--paper)" stroke-width="7" stroke-linecap="round">
+          <path d="M26 15 Q15 32 26 49" />
+          <path d="M38 15 Q49 32 38 49" />
+        </g>
+      </svg>
+      <span class="brand__word"><span class="brand__po">(PO)</span><span class="brand__rest">VEZIVANJE</span></span>
     </a>
     <nav class="nav__links" id="navLinks">
       <a href="#rezultat">Rezultat</a>
@@ -106,6 +115,25 @@
       Hvala vam na solidarnosti! Svaka kupljena knjiga, kravata i grafika
       bila je ulog u budućnost nezavisnog i profesionalnog novinarstva.
     </p>
+
+    <p class="result__beneficiaries-lead">
+      Sav prihod namenjen je studentskim medijima<br />
+      <strong>Univerzitetski Odjek</strong> i <strong>Blokada Info</strong>.
+    </p>
+
+    <div class="beneficiaries">
+      <a class="beneficiary" href="https://www.univerzitetskiodjek.com/" target="_blank" rel="noopener">
+        <img class="beneficiary__logo" src="assets/logos/odjek.jpg" alt="Univerzitetski Odjek" loading="lazy" />
+        <span class="beneficiary__name">Univerzitetski Odjek</span>
+        <span class="beneficiary__cta">Poseti sajt ↗</span>
+      </a>
+
+      <a class="beneficiary" href="https://www.blokada.info/sr/pisali-smo/" target="_blank" rel="noopener">
+        <img class="beneficiary__logo" src="assets/logos/blokada-info-full.png" alt="Blokada Info" loading="lazy" />
+        <span class="beneficiary__name">Blokada Info</span>
+        <span class="beneficiary__cta">Poseti sajt ↗</span>
+      </a>
+    </div>
 
     <!-- ZAHVALNICA / izjava inicijatorki — struktura je spremna; ubaci tekst i potpis pa otkomentariši:
     <blockquote class="thanks">
@@ -195,7 +223,7 @@
 <section class="section section--red" id="mediji">
   <div class="wrap">
     <p class="kicker kicker--light">Mediji o akciji</p>
-    <h2 class="section__title section__title--light">Čulo se dalje od kampusa</h2>
+    <h2 class="section__title section__title--light">Čulo se dalje od kampusa!</h2>
     <p class="section__intro">
       Akciju su ispratili novosadski i nacionalni mediji, od najava do izveštaja iz kampusa.
       Hvala im što su (po)vezivanje generacija učinili vidljivim.
@@ -728,6 +756,6 @@
 }
 </script>
 
-<script src="js/main.js?v=20260622e"></script>
+<script src="js/main.js?v=20260623b"></script>
 </body>
 </html>
